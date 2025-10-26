@@ -18,4 +18,4 @@ COPY ./ /code/app
 
 # CMD ["python", "-m", "uvicorn", "app:app"]
 
-CMD ["hypercorn", "app:app", "--bind", "\"[::]:$PORT\""]
+CMD ["hypercorn", "app:app", "--bind", "\"0.0.0.0:$PORT\""]
