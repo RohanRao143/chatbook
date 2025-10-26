@@ -1,0 +1,16 @@
+services:
+  tinyllama:
+    build: ./tinyllama
+    ports: ["8000:8000"]
+  faiss-server:
+    build: ./faiss-server
+    ports: ["7000:7000"]
+  rag-api:
+    build: ./rag-api
+    ports: ["8080:8080"]
+    depends_on: [tinyllama, faiss-server]
+  news-fetcher:
+    build: ./news-fetcher
+  finbert:
+    build: ./finbert
+    ports: ["8501:8501"]

@@ -1,0 +1,10 @@
+sentence_transformers
+faiss-cpu
+requests
+pandas
+# tabula-py
+unstructured[all-docs]
+cloudflare
+fastapi[standard]
+llama-cpp-python
+uvicorn[standard]
