@@ -16,4 +16,6 @@ COPY ./ /code/app
 
 # CMD ["fastapi", "run", "app.py", "--port", "80"]
 
-CMD ["python", "-m", "uvicorn", "app:app"]
+# CMD ["python", "-m", "uvicorn", "app:app"]
+
+CMD ["hypercorn", "app:app", "--bind", "\"[::]:$PORT\""]
