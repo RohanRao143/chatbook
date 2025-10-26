@@ -38,9 +38,9 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 #         )
 #     return bucket   
 
+app = FastAPI(swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
 
 
-"""
 def save_to_csv(knowledge_source: UploadFile):    
     try:
         contents = knowledge_source.file.read()
@@ -153,14 +153,7 @@ async def create_upload_file(knowledge_source: UploadFile = File(...)):
 
     return {"filename": knowledge_source.filename, "unique_id": unique_id}
 
-"""
 
-
-
-app = FastAPI(swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
-
-
-
-@app.get("/")
-async def root():
-    return {"greeting": "Hello, World!", "message": "Welcome to FastAPI!"}
+# @app.get("/")
+# async def root():
+#     return {"greeting": "Hello, World!", "message": "Welcome to FastAPI!"}

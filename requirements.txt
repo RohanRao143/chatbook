@@ -1,8 +1,8 @@
-# sentence_transformers
-# faiss-cpu
-# pandas
-# unstructured[all-docs]
-# requests
+sentence_transformers
+faiss-cpu
+pandas
+unstructured[all-docs]
+requests
 
 # fastapi[standard]
 # uvicorn[standard]
