@@ -12,7 +12,7 @@
 
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
-from cloudflare import Cloudflare
+# from cloudflare import Cloudflare
 
 from chatpdf import process_pdf_to_semantic_chunks, embed_sentences, add_sentences_to_index, embed_query, get_index, generate_from_semantics, summarize_semantics
 

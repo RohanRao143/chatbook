@@ -48,7 +48,7 @@ import pandas as pd
 from unstructured.partition.auto import partition
 from sentence_transformers import SentenceTransformer
 import faiss
-from llama_cpp import Llama
+# from llama_cpp import Llama
 from csv import writer
 
 from transformers import pipeline

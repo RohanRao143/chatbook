@@ -4,8 +4,8 @@ requests
 pandas
 # tabula-py
 unstructured[all-docs]
-cloudflare
+# cloudflare
 fastapi[standard]
-llama-cpp-python
+# llama-cpp-python
 uvicorn[standard]
-gunicorn
+# gunicorn
