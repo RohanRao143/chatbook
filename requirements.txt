@@ -1,11 +1,15 @@
-sentence_transformers
-faiss-cpu
-requests
-pandas
-# tabula-py
-unstructured[all-docs]
-# cloudflare
+# sentence_transformers
+# faiss-cpu
+# pandas
+# unstructured[all-docs]
+# requests
+
 fastapi[standard]
-# llama-cpp-python
 uvicorn[standard]
+
+
+
+# tabula-py
+# cloudflare
 # gunicorn
+# llama-cpp-python

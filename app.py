@@ -14,10 +14,10 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 # from cloudflare import Cloudflare
 
-from chatpdf import process_pdf_to_semantic_chunks, embed_sentences, add_sentences_to_index, embed_query, get_index, generate_from_semantics, summarize_semantics
+# from chatpdf import process_pdf_to_semantic_chunks, embed_sentences, add_sentences_to_index, embed_query, get_index, generate_from_semantics, summarize_semantics
 
-import tabula
-import pandas as pd
+# import tabula
+# import pandas as pd
 
 # client = Cloudflare(
 #     api_token="WhCl1yjbgG-upSsEHjD8d0LAQ6fPICiNEXkGHdgX",
@@ -38,6 +38,9 @@ import pandas as pd
 #         )
 #     return bucket   
 
+
+
+"""
 def save_to_csv(knowledge_source: UploadFile):    
     try:
         contents = knowledge_source.file.read()
@@ -150,3 +153,14 @@ async def create_upload_file(knowledge_source: UploadFile = File(...)):
 
     return {"filename": knowledge_source.filename, "unique_id": unique_id}
 
+"""
+
+
+
+app = FastAPI(swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
+
+
+
+@app.get("/")
+async def root():
+    return {"greeting": "Hello, World!", "message": "Welcome to FastAPI!"}
