@@ -4,9 +4,13 @@
 # unstructured[all-docs]
 # requests
 
-fastapi[standard]
-uvicorn[standard]
-hypercorn
+# fastapi[standard]
+# uvicorn[standard]
+# hypercorn
+
+
+fastapi==0.100.0
+hypercorn==0.14.4
 
 
 # tabula-py
