@@ -5,5 +5,6 @@
 
         uv add -r ./requirement.txt
 
-        uv run uvicorn main:app --reload
+        uv run uvicorn app:app --reload
 
+        gunicorn app:app --workers 4 --worker-class 
