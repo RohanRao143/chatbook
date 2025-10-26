@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "hypercorn app:app --bind \"[::]:$PORT\""
+    "startCommand": "uvicorn main:app --host \"[::]\" --port \"$PORT\" --forwarded-allow-ips='*'"
   }
 }
