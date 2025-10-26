@@ -18,6 +18,6 @@ COPY ./ /code/app
 
 # CMD ["python", "-m", "uvicorn", "app:app"]
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "\"$PORT\"", "--forwarded-allow-ips='*'"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80", "--forwarded-allow-ips='*'"]
 
 # CMD ["hypercorn", "app:app", "--bind", "\"[::]:$PORT\""]
