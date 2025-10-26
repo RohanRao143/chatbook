@@ -89,19 +89,25 @@ def process_faiss_index(filename: str):
 
 
 @app.get("/")
-async def format_files():
+async def format_files(request: Request, question: str):
     filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
     # sentences = process_pdf_to_semantic_chunks(filename)
 
-    sentences = get_sentences(filename)
-    print(sentences[:5])
+    # sentences = get_sentences(filename)
+    # print(sentences[:5])
+
+    print(question)
+    return {}
 
             
 
 @app.get("/chat")
 async def read_root(request: Request, question: str):
     # file_to_sentences("output.csv")
-    question = request.query_params.get("question", "Which Project Uses AI ?")
+    # print(question)
+    # return { "question" : question }
+    if question is None:
+      question = request.query_params.get("question", "Which Project Uses AI ?")
     if (question):
         filename = "the-future-is-faster-than-you-think.pdf"
         filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
