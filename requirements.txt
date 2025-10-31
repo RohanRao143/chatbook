@@ -1,16 +1,17 @@
 sentence_transformers
 faiss-cpu
 pandas
-unstructured[all-docs]
-requests
+# unstructured[all-docs]
+# requests
 
-# fastapi[standard]
-# uvicorn[standard]
+fastapi[standard]
+uvicorn[standard]
 # hypercorn
+# opencv-python-headless
 
 
-fastapi==0.100.0
-hypercorn==0.14.4
+# fastapi==0.100.0
+# hypercorn==0.14.4
 
 
 # tabula-py

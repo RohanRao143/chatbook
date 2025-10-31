@@ -1,0 +1,53 @@
+# Ignore Git-related files
+.git
+.gitignore
+.gitmodules
+.gitattributes
+
+# Ignore common build artifacts and temporary files
+build/
+dist/
+target/
+*.log
+*.tmp
+*.bak
+*.swp
+temp/
+tmp/
+
+# Ignore dependency caches for various languages/frameworks
+node_modules/
+vendor/
+venv/
+CEnv/
+TEnv/
+.bundle/
+pip-cache/
+__pycache__
+
+# Ignore IDE/editor-specific files
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# Ignore environment configuration files
+.env
+.env.*
+config/local/
+
+# Ignore Docker-specific files that are not needed in the image
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Ignore specific files or directories based on project needs
+# For example, if you have a documentation folder you don't need in the image
+docs/
+
+# Exclude all files in a directory except specific ones
+# Example: exclude everything in 'data' except 'important.csv'
+# data/*
+# !data/important.csv

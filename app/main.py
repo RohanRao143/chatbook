@@ -14,11 +14,15 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 # from cloudflare import Cloudflare
 
-# from chatpdf import process_pdf_to_semantic_chunks, embed_sentences, add_sentences_to_index, embed_query, get_index, generate_from_semantics, summarize_semantics
+from app.chatpdf import embed_query, get_index, summarize_semantics
 
+
+from app.utilities import process_file
+ 
 # import tabula
-# import pandas as pd
+import pandas as pd
 
+import os
 # client = Cloudflare(
 #     api_token="WhCl1yjbgG-upSsEHjD8d0LAQ6fPICiNEXkGHdgX",
 # )
@@ -46,15 +50,21 @@ def save_to_csv(knowledge_source: UploadFile):
         contents = knowledge_source.file.read()
         with open(knowledge_source.filename, 'wb') as f:
             f.write(contents)
+
+        print(os.getcwd())
+        print(knowledge_source.filename)
+        print(os.listdir(os.getcwd()))
     except Exception:
         raise HTTPException(status_code=500, detail='Something went wrong')
     finally:
         knowledge_source.file.close()
-    pdf_path = knowledge_source.filename # Replace with the path to your PDF file
-    csv_path = knowledge_source.filename + ".csv" # Desired output CSV file name
+
+    print(os.listdir())
+    # pdf_path = knowledge_source.filename # Replace with the path to your PDF file
+    # csv_path = knowledge_source.filename + ".csv" # Desired output CSV file name
     # Convert all tables from all pages of the PDF to a single CSV file
-    tabula.convert_into(pdf_path, csv_path, output_format="csv", pages="all")
-    print(f"PDF tables from '{pdf_path}' converted to '{csv_path}'")
+    # tabula.convert_into(pdf_path, csv_path, output_format="csv", pages="all")
+    # print(f"PDF tables from '{pdf_path}' converted to '{csv_path}'")
     
 
 
@@ -75,20 +85,20 @@ def get_sentences(filename: str):
 
 
 
-def process_faiss_index(filename: str):
-    sentences = process_pdf_to_semantic_chunks(filename)
-    index = get_index(filename)
-    if index is None:
-        print("Processing PDF to semantic chunks:")
-        sentence_embeddings = embed_sentences(sentences)
-        index = add_sentences_to_index(sentence_embeddings, filename)
+# def process_faiss_index(filename: str):
+#     sentences = process_pdf_to_semantic_chunks(filename)
+#     index = get_index(filename)
+#     if index is None:
+#         print("Processing PDF to semantic chunks:")
+#         sentence_embeddings = embed_sentences(sentences)
+#         index = add_sentences_to_index(sentence_embeddings, filename)
 
-        print(sentences[:3])
-        data = { "knowledge": sentences }
-        df = pd.DataFrame(data)
-        df.to_csv(filename + ".csv", index=False)
+#         print(sentences[:3])
+#         data = { "knowledge": sentences }
+#         df = pd.DataFrame(data)
+#         df.to_csv(filename + ".csv", index=False)
 
-    return index, sentences
+#     return index, sentences
 
 
 @app.get("/")
@@ -105,55 +115,70 @@ async def format_files(request: Request, question: str):
             
 
 @app.get("/chat")
-async def read_root(request: Request, question: str):
+async def read_root(request: Request, question: str, rel_docs: int, filename: str):
     # file_to_sentences("output.csv")
     # print(question)
     # return { "question" : question }
-    if question is None:
-      question = request.query_params.get("question", "Which Project Uses AI ?")
+    # if question is None:
+    #   question = request.query_params.get("question", "Which Project Uses AI ?")
     if (question):
-        filename = "the-future-is-faster-than-you-think.pdf"
-        filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
+        # filename = "the-future-is-faster-than-you-think.pdf"
+        # filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
         # sentences = process_pdf_to_semantic_chunks(filename)
+        print(question)
         index = get_index(filename)
         sentences = get_sentences(filename)
         xq = embed_query(question)
         k = 6
+
+        if rel_docs < 10:
+            k = rel_docs
+        else:
+            k = 9
+
         D, I = index.search(xq, k)  # search
         print(I, len(sentences))
         # for i in I[0]:
         #     print(sentences[i])
         context = [sentences[i] for i in I[0]]
         print(context)
-        return {"response": summarize_semantics(" ".join(context)), "question": question}
+        # return {"generative_response": google_summarizer(question, " ".join(context)), "question": question}
+        # # return {"generative_response": summarize_text_t5(" ".join(context)), "question": question}
+        return {"generative_response": summarize_semantics(" ".join(context)), "question": question}
     else:
         raise HTTPException(status_code=400, detail="Ask a question.")
 
-@app.post("/index_portfolio")
-async def index_data():
-    filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
-    try:
-        process_faiss_index(filename)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing file: {e}")
-    return {"status": "Indexing completed successfully."}
+# @app.post("/index_portfolio")
+# async def index_data():
+#     filename = "MRohanRaoResumeProfile2025-1.pdf.pdf"
+#     try:
+#         process_file(filename)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Error processing file: {e}")
+#     return {"status": "Indexing completed successfully."}
 
 
-@app.post("/uploadfile/")
+@app.post("/upload_to_index/")
 async def create_upload_file(knowledge_source: UploadFile = File(...)):
 
     print("Received file:", knowledge_source)
     if not knowledge_source.filename.endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
     save_to_csv(knowledge_source)
-    
+    try:
+        process_file(knowledge_source.filename)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing file: {e}")
     # Process the PDF file and create vector database
     # Store the vector database in S3 with a unique id
     unique_id = "some_generated_unique_id"  # Replace with actual unique id generation logic
 
-    return {"filename": knowledge_source.filename, "unique_id": unique_id}
+    return {"filename": knowledge_source.filename, "unique_id": unique_id, "status": "Indexing completed successfully."}
 
 
 # @app.get("/")
 # async def root():
 #     return {"greeting": "Hello, World!", "message": "Welcome to FastAPI!"}
+
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

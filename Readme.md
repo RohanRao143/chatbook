@@ -1,6 +1,15 @@
-python -m uvicorn app:app --reload
+# Retrival Augument Generation - short for RAG. RAG pipeline to extact relevant documents data based on L2 or euclidean distance between prompt and document content. 
 
 
+
+
+python -m venv chatbook
+
+./chatbook/Scripts/activate 
+
+python install -r requirements.txt
+
+python -m uvicorn main.app:app --reload
 
 
 

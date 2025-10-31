@@ -1,0 +1,52 @@
+# Stage 1: Build Stage
+# Use a more comprehensive base image to install build dependencies
+# Note: A non-slim image is used here to simplify dependency installation
+FROM python:3.11 AS builder
+
+# Install system dependencies needed for unstructured PDF processing
+# poppler-utils and tesseract-ocr are crucial for PDFs
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libmagic-dev \
+        poppler-utils \
+        tesseract-ocr \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the unstructured Python package with PDF extras
+COPY requirements.txt .
+
+RUN python -m venv /opt/venv2
+
+RUN /opt/venv2/bin/pip install --no-cache-dir -r requirements.txt \
+    && pip install "unstructured[pdf]"
+
+
+
+
+# Stage 2: Production/Runtime Stage
+# Use the slim image for the final, lightweight application
+FROM python:3.11-slim
+
+# Install only the runtime system libraries needed
+# libmagic and poppler are necessary for filetype detection and PDF processing
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libmagic1 \
+        poppler-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only the built Python environment from the build stage
+# COPY --from=0 /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /opt/venv2 /opt/venv2
+
+
+
+# Copy your application code into the runtime image
+WORKDIR /app
+COPY . /app
+
+# Define your command
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
