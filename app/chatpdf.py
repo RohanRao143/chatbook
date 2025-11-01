@@ -81,20 +81,27 @@ def add_sentences_to_index(sentence_embeddings, filename):
     dimension_b = sentence_embeddings.shape[1]  # dimension
 
     index = faiss.IndexFlatL2(dimension_b)  # build the index
-
-    print(index.is_trained)  # check if the index is trained
+    # print(index.is_trained)  # check if the index is trained
 
     index.add(sentence_embeddings)  # add vectors to the index
 
-    faiss.write_index(index, f"{filename}_index.faiss")
+
+    # File to CLOUDFLARE
+    faiss.write_index(index, f"data/{filename}_index.faiss")
     print(f"FAISS index saved to {filename}")
 
     return index
 
+def get_index_name(filename):
+    return f"data/{filename}_index.faiss"
+
 def get_index(filename):
+
+    # check local or download s3
+
     index = None
     try:
-        index = faiss.read_index(f"{filename}_index.faiss")
+        index = faiss.read_index(f"data/{filename}_index.faiss")
     except Exception as e:
         print(f"Error loading index: {e}")
         index = None
@@ -126,7 +133,7 @@ def summarize_semantics(combined_text):
     # return tokenizer.decode(output[0], skip_special_tokens=True)
     summary = ""
     # max_length=256
-    summary = summarizer(combined_text, max_length=49, min_length=50, do_sample=False)
+    summary = summarizer(combined_text, max_length=120, min_length=50, do_sample=False)
     return summary
 
 

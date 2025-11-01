@@ -1,6 +1,10 @@
 sentence_transformers
 faiss-cpu
 pandas
+cloudflare
+boto3
+dataplane
+
 # unstructured[all-docs]
 # requests
 
@@ -15,6 +19,5 @@ uvicorn[standard]
 
 
 # tabula-py
-# cloudflare
 # gunicorn
 # llama-cpp-python

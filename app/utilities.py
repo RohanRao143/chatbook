@@ -59,7 +59,7 @@ def file_to_chunks(file):
 
 
 def process_file(filename):
-    sentences = file_to_chunks(filename)
+    sentences = file_to_chunks(f"data/{filename}")
     if len(sentences) != 0:
         # index = get_index(filename)
         # if index is None:
@@ -67,8 +67,13 @@ def process_file(filename):
         # print(sentences[:3])
         data = { "knowledge": sentences }
         df = pd.DataFrame(data)
-        df.to_csv(filename + ".csv", index=False)
-        return index
+        docs_name = f"data/{filename}.csv"
+        df.to_csv(docs_name, index=False)
+        
+        # File to CLOUDFLARE
+        
+
+        return index, docs_name
 
     return None
 
